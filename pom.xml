@@ -6,11 +6,6 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>my-app</name>
-  <server>
-    <id>art-1</id>
-    <username>admin</username>
-    <password>abcdEFGH1234</password>
-</server> 
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
