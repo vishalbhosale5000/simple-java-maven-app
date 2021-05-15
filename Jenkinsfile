@@ -11,8 +11,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
+                sh 'mvn -B -DskipTests clean package'  // jar file will be generated from the java code from git hub repo
+            }                                          // and saved inside docker container for Jenkins at :    
+			                                     // /var/jenkins_home/workspace/simple-java-maven-app/target/my-app-1.0-SNAPSHOT.jar   
         }
         stage('Test') {
             steps {
@@ -20,14 +21,25 @@ pipeline {
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    junit 'target/surefire-reports/*.xml'   // Tests will be saved inside docker container for Jenkins at :       
+					                                     //  /var/jenkins_home/workspace/simple-java-maven-app/target/surefire-reports
                 }
             }
         }
-        stage('Deliver') { 
-            steps {
-                sh './jenkins/scripts/deliver.sh' 
-            }
-         }
+        stage('Upload') {
+            steps{
+			     script { 
+                 def server = Artifactory.server 'art-1'
+                 def uploadSpec = """{
+                    "files": [{
+                       "pattern": "/var/jenkins_home/workspace/simple-java-maven-app/target/*.jar",
+                       "target": "libs-snapshot-local/"
+                    }]
+                 }"""
+
+                 server.upload(uploadSpec) 
+               }
+			 }
+        }
     }
 }
