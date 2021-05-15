@@ -30,7 +30,10 @@ pipeline {
             steps{
 			     script { 
                  def server = Artifactory.server 'art-1'
-                 def uploadSpec = """{
+                server.bypassProxy = true
+                server.username = 'admin'
+                server.password = 'abcdEFGH1234' 
+		def uploadSpec = """{
                     "files": [{
                        "pattern": "/var/jenkins_home/workspace/simple-java-maven-app/target/*.jar",
                        "target": "libs-snapshot-local/"
