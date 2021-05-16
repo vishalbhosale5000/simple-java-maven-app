@@ -9,6 +9,11 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
+	    checkout scm
+stage ('Check commit')
+ { 
+    sh('/var/jenkins_home/workspace/simple-java-maven-app/restrict.sh')
+ }
         stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'  // jar file will be generated from the java code from git hub repo
